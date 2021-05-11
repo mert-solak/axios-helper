@@ -1,0 +1,13 @@
+.vscode
+node_modules
+src
+.dev.env
+.editorconfig
+.env
+.eslingignore
+.eslintrc.js
+.gitignore
+.prettierrc
+package-lock.json
+rollup.config.js
+tsconfig.json
