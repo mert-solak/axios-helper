@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useReducer } fro
 import { ContextProps, Action, State, AxiosContextValue } from '@interfaces/main.interface';
 
 const initialState: State = {
-  AxiosProgressComponent: null,
+  ProgressComponent: null,
   isLoading: false,
   defaultOptions: {
     isLoadingBlocked: true,
@@ -12,7 +12,7 @@ const initialState: State = {
 
 const axiosContextValue: AxiosContextValue = {
   ...initialState,
-  setAxiosProgressComponent: () => {},
+  setProgressComponent: () => {},
   setAxiosIsLoading: () => {},
   setAxiosDefaultOptions: () => {},
 };
@@ -22,7 +22,7 @@ export const AxiosContext = createContext(axiosContextValue);
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_AXIOS_PROGRESS_COMPONENT':
-      return { ...state, AxiosProgressComponent: action.payload };
+      return { ...state, ProgressComponent: action.payload };
 
     case 'SET_IS_LOADING':
       return { ...state, isLoading: action.payload };
@@ -35,23 +35,16 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const AxiosProvider: React.FC<ContextProps> = ({
-  children,
-  AxiosProgressComponent,
-  defaultOptions,
-}) => {
+export const AxiosProvider: React.FC<ContextProps> = ({ children, ProgressComponent, defaultOptions }) => {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    AxiosProgressComponent,
+    ProgressComponent,
     defaultOptions,
   });
 
-  const setAxiosProgressComponent = useCallback(
-    (AxiosProgressComponentInstance: State['AxiosProgressComponent']) => {
-      dispatch({ type: 'SET_AXIOS_PROGRESS_COMPONENT', payload: AxiosProgressComponentInstance });
-    },
-    [],
-  );
+  const setProgressComponent = useCallback((ProgressComponentInstance: State['ProgressComponent']) => {
+    dispatch({ type: 'SET_AXIOS_PROGRESS_COMPONENT', payload: ProgressComponentInstance });
+  }, []);
   const setAxiosIsLoading = useCallback((isLoading?: State['isLoading']) => {
     dispatch({ type: 'SET_IS_LOADING', payload: isLoading });
   }, []);
@@ -60,21 +53,21 @@ export const AxiosProvider: React.FC<ContextProps> = ({
   }, []);
 
   useEffect(() => {
-    setAxiosProgressComponent(AxiosProgressComponent);
-  }, [AxiosProgressComponent]);
+    setProgressComponent(ProgressComponent);
+  }, [ProgressComponent]);
   useEffect(() => {
     setAxiosDefaultOptions(defaultOptions);
   }, [defaultOptions]);
 
-  const { AxiosProgressComponent: CurrentAxiosProgressComponent, isLoading } = state;
+  const { ProgressComponent: CurrentProgressComponent, isLoading } = state;
 
   const provider = useMemo(
     () => (
       <AxiosContext.Provider
-        value={{ ...state, setAxiosProgressComponent, setAxiosIsLoading, setAxiosDefaultOptions }}
+        value={{ ...state, setProgressComponent, setAxiosIsLoading, setAxiosDefaultOptions }}
       >
         {children}
-        {state.isLoading && <CurrentAxiosProgressComponent />}
+        {state.isLoading && <CurrentProgressComponent />}
       </AxiosContext.Provider>
     ),
     [isLoading],

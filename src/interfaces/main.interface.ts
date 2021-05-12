@@ -11,12 +11,12 @@ declare module 'axios' {
 }
 
 export interface State {
-  AxiosProgressComponent: React.FunctionComponent;
+  ProgressComponent: React.FunctionComponent;
   isLoading: boolean;
   defaultOptions: Options;
 }
 export interface ContextProps {
-  AxiosProgressComponent: State['AxiosProgressComponent'];
+  ProgressComponent: State['ProgressComponent'];
   defaultOptions: State['defaultOptions'];
 }
 
@@ -39,7 +39,7 @@ export type Action =
     };
 
 export interface AxiosContextValue extends Omit<State, 'axiosConfigured'> {
-  setAxiosProgressComponent: (axiosProgressComponent: State['AxiosProgressComponent']) => void;
+  setProgressComponent: (ProgressComponentInstance: State['ProgressComponent']) => void;
   setAxiosIsLoading: (isLoading: State['isLoading']) => void;
   setAxiosDefaultOptions: (defaultOptions: State['defaultOptions']) => void;
 }
