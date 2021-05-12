@@ -48,7 +48,7 @@ import { useAxios } from '@mertsolak/axios-helper';
 const HomePage = () => {
   const axios1 = useAxios({ isLoadingBlocked: true }); // progress spinner blocked
   const axios2 = useAxios({ isLoadingBlocked: false }); // progress spinner not blocked
-  const axios3 = useAxios(); // uses default options in root.tsx, progress not blocked
+  const axios3 = useAxios(); // uses default options in root.tsx, progress spinner not blocked
 
   useEffect(() => {
     const getData = async () => {
