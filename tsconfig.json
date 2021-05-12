@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": {},
+    "paths": {
+      "@utils/*": ["utils/*"],
+      "@enums/*": ["enums/*"],
+      "@contexts/*": ["contexts/*"],
+      "@hooks/*": ["hooks/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@helpers/*": ["helpers/*"]
+    },
     "outDir": "dist",
     "module": "esnext",
     "target": "es5",
