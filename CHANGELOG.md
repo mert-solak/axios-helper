@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/mert-solak/axios-helper/compare/v2.0.0...v2.1.0) (2021-05-13)
+
+
+### Bug Fixes
+
+* **src/*:** absolute path to relative path ([9a1a13f](https://github.com/mert-solak/axios-helper/commit/9a1a13fea1d119f5a6fb9aa72845501b3b923819))
+
 ## 2.0.0 (2021-05-13)
 
 
