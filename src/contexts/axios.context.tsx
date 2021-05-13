@@ -3,7 +3,6 @@ import React, { createContext, useCallback, useEffect, useMemo, useReducer } fro
 import { ContextProps, Action, State, AxiosContextValue } from '@interfaces/main.interface';
 
 const initialState: State = {
-  ProgressComponent: null,
   isLoading: false,
   defaultOptions: {
     isLoadingBlocked: true,
@@ -12,7 +11,6 @@ const initialState: State = {
 
 const axiosContextValue: AxiosContextValue = {
   ...initialState,
-  setProgressComponent: () => {},
   setAxiosIsLoading: () => {},
   setAxiosDefaultOptions: () => {},
 };
@@ -21,9 +19,6 @@ export const AxiosContext = createContext(axiosContextValue);
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'SET_AXIOS_PROGRESS_COMPONENT':
-      return { ...state, ProgressComponent: action.payload };
-
     case 'SET_IS_LOADING':
       return { ...state, isLoading: action.payload };
 
@@ -35,16 +30,12 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const AxiosProvider: React.FC<ContextProps> = ({ children, ProgressComponent, defaultOptions }) => {
+export const AxiosProvider: React.FC<ContextProps> = ({ children, defaultOptions }) => {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    ProgressComponent,
     defaultOptions,
   });
 
-  const setProgressComponent = useCallback((ProgressComponentInstance: State['ProgressComponent']) => {
-    dispatch({ type: 'SET_AXIOS_PROGRESS_COMPONENT', payload: ProgressComponentInstance });
-  }, []);
   const setAxiosIsLoading = useCallback((isLoading?: State['isLoading']) => {
     dispatch({ type: 'SET_IS_LOADING', payload: isLoading });
   }, []);
@@ -53,21 +44,15 @@ export const AxiosProvider: React.FC<ContextProps> = ({ children, ProgressCompon
   }, []);
 
   useEffect(() => {
-    setProgressComponent(ProgressComponent);
-  }, [ProgressComponent]);
-  useEffect(() => {
     setAxiosDefaultOptions(defaultOptions);
   }, [defaultOptions]);
 
-  const { ProgressComponent: CurrentProgressComponent, isLoading } = state;
+  const { isLoading } = state;
 
   const provider = useMemo(
     () => (
-      <AxiosContext.Provider
-        value={{ ...state, setProgressComponent, setAxiosIsLoading, setAxiosDefaultOptions }}
-      >
+      <AxiosContext.Provider value={{ ...state, setAxiosIsLoading, setAxiosDefaultOptions }}>
         {children}
-        {state.isLoading && <CurrentProgressComponent />}
       </AxiosContext.Provider>
     ),
     [isLoading],
