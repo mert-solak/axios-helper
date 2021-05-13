@@ -1,3 +1,7 @@
+## Axios Helper
+
+Developed for easy integration of progress spinners into axios.
+
 ![npm](https://img.shields.io/npm/v/@mertsolak/axios-helper)
 ![license](https://img.shields.io/npm/l/@mertsolak/axios-helper)
 ![size](https://img.shields.io/bundlephobia/min/@mertsolak/axios-helper)
@@ -5,7 +9,7 @@
 
 ## Installation
 
-Use node package manager to install @mertsolak/axios-helper
+Use node package manager to install @mertsolak/axios-helper.
 
 ```bash
 npm i @mertsolak/axios-helper
@@ -13,30 +17,58 @@ npm i @mertsolak/axios-helper
 
 ## Basic Usage
 
-Initialize it in the root component
+Initialize it in the root component.
 
 ```typescript
 // Root.tsx
 
 import { AxiosProvider } from '@mertsolak/axios-helper';
 
+import App from './App';
+
 export const defaultOptions = {
   isLoadingBlocked: false,
 };
 
-// Component should be pre-styled.
-const ProgressSpinner = () => <p>Progress Spinner</p>;
-
 const Root = () => {
   return (
-    <AxiosProvider ProgressComponent={ProgressSpinner} defaultOptions={defaultOptions}>
+    <AxiosProvider defaultOptions={defaultOptions}>
       <App />
     </AxiosProvider>
   );
 };
+
+export default Root;
 ```
 
-Use it everywhere
+Place your progress spinner in a suitable component.
+
+```typescript
+// App.tsx
+
+import { useContext } from 'react';
+
+import { AxiosContext } from '@mertsolak/axios-helper';
+
+import HomePage from './HomePage';
+
+const ProgressSpinner = () => <p>Progress Spinner</p>;
+
+const App = () => {
+  const { isLoading } = useContext(AxiosContext);
+
+  return (
+    <div>
+      <HomePage />
+      {isLoading && <ProgressSpinner />}
+    </div>
+  );
+};
+
+export default App;
+```
+
+Use axios everywhere.
 
 ```typescript
 // HomePage.tsx
@@ -61,14 +93,16 @@ const HomePage = () => {
 
   return <p>Home Page</p>;
 };
+
+export default HomePage;
 ```
 
 ## Additional
 
-defaultOptions and progressComponent can be updated in everywhere.
+defaultOptions can be updated in everywhere.
 
 ```typescript
-// HomePage.tsx
+// SomeOtherComponent.tsx
 
 import { useContext, useEffect } from 'react';
 
@@ -78,16 +112,15 @@ export const updatedDefaultOptions = {
   isLoadingBlocked: false,
 };
 
-const AnotherProgressSpinner = () => <p>Another Progress Spinner</p>;
-
 const SomeOtherComponent = () => {
-  const { setProgressComponent, setAxiosDefaultOptions } = useContext(AxiosContext);
+  const { setAxiosDefaultOptions } = useContext(AxiosContext);
 
   useEffect(() => {
-    setProgressComponent(AnotherProgressSpinner);
     setAxiosDefaultOptions(updatedDefaultOptions);
   }, []);
 
   return <p>Some Other Component</p>;
 };
+
+export default SomeOtherComponent;
 ```
