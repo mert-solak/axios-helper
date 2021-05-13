@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
 
-import { ContextProps, Action, State, AxiosContextValue } from '@interfaces/main.interface';
+import { ContextProps, Action, State, AxiosContextValue } from '../interfaces/main.interface';
 
 const initialState: State = {
   isLoading: false,

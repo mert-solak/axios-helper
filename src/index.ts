@@ -1,2 +1,4 @@
-export { AxiosProvider, AxiosContext } from '@contexts/axios.context';
-export { useAxios } from '@hooks/axios.hook';
+import { AxiosProvider, AxiosContext } from './contexts/axios.context';
+import { useAxios } from './hooks/axios.hook';
+
+export { AxiosProvider, AxiosContext, useAxios };

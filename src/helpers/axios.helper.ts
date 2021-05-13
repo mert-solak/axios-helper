@@ -1,6 +1,6 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { ConfigureInterceptors, SetAxiosIsLoadingByCounter } from '@interfaces/main.interface';
+import { ConfigureInterceptors, SetAxiosIsLoadingByCounter } from '../interfaces/main.interface';
 
 const setAxiosIsLoadingByCounter: SetAxiosIsLoadingByCounter = (requestNumber: number, setAxiosIsLoading) => {
   if (requestNumber < 1) {
