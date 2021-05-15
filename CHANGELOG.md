@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/mert-solak/axios-helper/compare/v2.1.0...v2.1.1) (2021-05-15)
+
+
+### Bug Fixes
+
+* **src/interfaces/main.interface.ts:** made isLoadingBlocked optional in AxiosOptions ([fcaa424](https://github.com/mert-solak/axios-helper/commit/fcaa42455ca95695af7e66b0314bed46c2a6e537))
+
 ## [2.1.0](https://github.com/mert-solak/axios-helper/compare/v2.0.0...v2.1.0) (2021-05-13)
 
 
