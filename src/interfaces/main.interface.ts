@@ -5,7 +5,7 @@ export interface Options {
 }
 
 declare module 'axios' {
-  interface AxiosRequestConfig extends Options {}
+  interface AxiosRequestConfig extends Partial<Options> {}
 }
 
 export interface State {
