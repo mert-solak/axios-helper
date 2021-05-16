@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 
-type HandleErrorsBy = 'status' | 'name';
+type HandleErrorsBy = string;
 type HandleErrorsWith = Record<string, string>;
 type ErrorHandler = (errorMessage: string) => void | null;
 
@@ -13,7 +13,7 @@ export interface Options {
 
 declare module 'axios' {
   interface AxiosRequestConfig extends Partial<Options> {
-    handled: boolean;
+    handled?: boolean;
   }
 }
 
