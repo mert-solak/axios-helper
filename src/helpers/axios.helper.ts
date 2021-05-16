@@ -1,4 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { isDefined } from 'class-validator';
 
 import { ConfigureInterceptors, SetAxiosIsLoadingByCounter } from '../interfaces/main.interface';
 
@@ -10,9 +11,16 @@ const setAxiosIsLoadingByCounter: SetAxiosIsLoadingByCounter = (requestNumber: n
   }
 };
 
-export const configureInterceptors: ConfigureInterceptors = (axiosInstance, setAxiosIsLoading) => {
+export const configureInterceptors: ConfigureInterceptors = (
+  axiosInstance,
+  setAxiosIsLoading,
+  errorHandlerParams,
+) => {
   let requestNumber = 0;
   let isLoadingBlocked = false;
+
+  const options = errorHandlerParams.errorHandlerOptions;
+  const { errorHandler } = errorHandlerParams;
 
   const requestOut = () => {
     if (!isLoadingBlocked) {
@@ -32,11 +40,34 @@ export const configureInterceptors: ConfigureInterceptors = (axiosInstance, setA
       setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
     }
   };
-  const responseError = () => {
+  const responseError = (error: AxiosError): AxiosError => {
     if (!isLoadingBlocked) {
       requestNumber -= 1;
       setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
     }
+
+    if (!options.isErrorHandlerBlocked && isDefined(errorHandler)) {
+      const handleErrorsBy = error.response[options.handleErrorsBy];
+
+      if (!isDefined(handleErrorsBy)) {
+        return error;
+      }
+
+      const errorMessage = options.handleErrorsWith[handleErrorsBy];
+
+      if (!isDefined(errorMessage)) {
+        return error;
+      }
+
+      errorHandler(errorMessage);
+
+      const newError = { ...error };
+      newError.config.handled = true;
+
+      return newError;
+    }
+
+    return error;
   };
 
   axiosInstance.interceptors.request.use(
@@ -61,9 +92,9 @@ export const configureInterceptors: ConfigureInterceptors = (axiosInstance, setA
       return response;
     },
     (error: AxiosError) => {
-      responseError();
+      const handledError = responseError(error);
 
-      return Promise.reject(error);
+      return Promise.reject(handledError);
     },
   );
 };

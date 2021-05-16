@@ -7,16 +7,19 @@ import { AxiosContext } from '../contexts/axios.context';
 import { HookProps } from '../interfaces/main.interface';
 import { configureInterceptors } from '../helpers/axios.helper';
 
-export const useAxios = (props?: HookProps) => {
-  const { setAxiosIsLoading, defaultOptions } = useContext(AxiosContext);
+export const useAxios = (options?: HookProps) => {
+  const { setAxiosIsLoading, defaultOptions, errorHandler } = useContext(AxiosContext);
 
   let combinedOptions = { ...defaultOptions };
-  if (isDefined(props) && isDefined(props.options)) {
-    combinedOptions = { ...combinedOptions, ...props.options };
+  if (isDefined(options)) {
+    combinedOptions = { ...combinedOptions, ...options };
   }
 
-  const axios = originalAxios.create(combinedOptions);
-  configureInterceptors(axios, setAxiosIsLoading);
+  const axios = originalAxios.create({ ...combinedOptions, handled: false });
+  configureInterceptors(axios, setAxiosIsLoading, {
+    errorHandler,
+    errorHandlerOptions: combinedOptions,
+  });
 
   return axios;
 };
