@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/mert-solak/axios-helper/compare/v2.1.1...v3.0.0) (2021-05-16)
+
+
+### Features
+
+* **src/*:** error handler added ([2b80546](https://github.com/mert-solak/axios-helper/commit/2b80546b4a870a92da4138ecde5cf56657ac94d8))
+
 ### [2.1.1](https://github.com/mert-solak/axios-helper/compare/v2.1.0...v2.1.1) (2021-05-15)
 
 
