@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.4](https://github.com/mert-solak/axios-helper/compare/v3.0.3...v3.0.4) (2021-05-17)
+
+
+### Features
+
+* **src/*:** type export & handleBy type update & readme update ([aa97442](https://github.com/mert-solak/axios-helper/commit/aa974429f61612f273b007f2c0d4110ab2b00a7f))
+
 ### [3.0.3](https://github.com/mert-solak/axios-helper/compare/v3.0.2...v3.0.3) (2021-05-16)
 
 ### [3.0.2](https://github.com/mert-solak/axios-helper/compare/v3.0.1...v3.0.2) (2021-05-16)
