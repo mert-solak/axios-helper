@@ -1,6 +1,6 @@
 ## Axios Helper
 
-Developed for easy integration of progress spinners into axios.
+Developed for easy integration of progress spinner and error handler into axios.
 
 ![npm](https://img.shields.io/npm/v/@mertsolak/axios-helper)
 ![license](https://img.shields.io/npm/l/@mertsolak/axios-helper)
@@ -26,13 +26,22 @@ import { AxiosProvider } from '@mertsolak/axios-helper';
 
 import App from './App';
 
-export const defaultOptions = {
+const defaultOptions = {
   isLoadingBlocked: false,
+  isErrorHandlerBlocked: false,
+  handleErrorsBy: 'status', // can be 'status' or 'name'
+  handleErrorsWith: { '404': 'not found' }, // format must be {[status]: 'error message'} or {[name]: 'error message'} depends on the handleErrorsBy option
+};
+
+const errorHandler = (errorMessage) => {
+  // Globally handle error message in here.
+  // console.log(errorMessage);
+  // alert(errorMessage);
 };
 
 const Root = () => {
   return (
-    <AxiosProvider defaultOptions={defaultOptions}>
+    <AxiosProvider defaultOptions={defaultOptions} errorHandler={errorHandler}>
       <App />
     </AxiosProvider>
   );
@@ -78,15 +87,21 @@ import { useEffect } from 'react';
 import { useAxios } from '@mertsolak/axios-helper';
 
 const HomePage = () => {
-  const axios1 = useAxios({ isLoadingBlocked: true }); // progress spinner blocked
-  const axios2 = useAxios({ isLoadingBlocked: false }); // progress spinner not blocked
-  const axios3 = useAxios(); // uses default options in root.tsx, progress spinner not blocked
+  const axios1 = useAxios({ isLoadingBlocked: true, isErrorHandlerBlocked: true }); // progress spinner and global error handler blocked
+  const axios2 = useAxios({ isLoadingBlocked: false, isErrorHandlerBlocked: false }); // progress spinner and global error handler not blocked
+  const axios3 = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
 
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios1.get(url);
-      const { data } = await axios2.get(url);
-      const { data } = await axios3.get(url);
+      try {
+        const { data } = await axios1.get(url);
+        const { data } = await axios2.get(url);
+        const { data } = await axios3.get(url);
+      } catch (error) {
+        if (!error?.config?.handled) {
+          // you can handle the errors that is not handled by the global error handler in here.
+        }
+      }
     };
     getData();
   }, []);
@@ -99,7 +114,7 @@ export default HomePage;
 
 ## Additional
 
-defaultOptions can be updated in everywhere.
+defaultOptions and errorHandler can be updated in everywhere.
 
 ```typescript
 // SomeOtherComponent.tsx
@@ -108,15 +123,23 @@ import { useContext, useEffect } from 'react';
 
 import { AxiosContext } from '@mertsolak/axios-helper';
 
-export const updatedDefaultOptions = {
+const updatedDefaultOptions = {
   isLoadingBlocked: false,
+  isErrorHandlerBlocked: false,
+  handleErrorsBy: 'name',
+  handleErrorsWith: { NOT_FOUND: 'not found' },
+};
+
+const updatedErrorHandler = (errorMessage) => {
+  console.log(errorMessage);
 };
 
 const SomeOtherComponent = () => {
-  const { setAxiosDefaultOptions } = useContext(AxiosContext);
+  const { setAxiosDefaultOptions, setErrorHandler } = useContext(AxiosContext);
 
   useEffect(() => {
     setAxiosDefaultOptions(updatedDefaultOptions);
+    setErrorHandler(updatedErrorHandler);
   }, []);
 
   return <p>Some Other Component</p>;

@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 
-type HandleErrorsBy = string;
+type HandleErrorsBy = 'name' | 'status';
 type HandleErrorsWith = Record<string, string>;
-type ErrorHandler = (errorMessage: string) => void | null;
+export type ErrorHandler = ((errorMessage: string) => void) | null;
 
 export interface Options {
   isLoadingBlocked: boolean;

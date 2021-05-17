@@ -47,7 +47,8 @@ export const configureInterceptors: ConfigureInterceptors = (
     }
 
     if (!options.isErrorHandlerBlocked && isDefined(errorHandler)) {
-      const handleErrorsBy = error.response[options.handleErrorsBy];
+      const handleErrorsBy =
+        error.response.data[options.handleErrorsBy] || error.response[options.handleErrorsBy];
 
       if (!isDefined(handleErrorsBy)) {
         return error;
