@@ -1,8 +1,7 @@
-/node_modules
-/dist
+node_modules
+dist
 
 .DS_Store
-.env.development
 package-lock.json
 .env
 .dev.env
