@@ -27,6 +27,7 @@ import { AxiosProvider } from '@mertsolak/axios-helper';
 import App from './App';
 
 const defaultOptions = {
+  headers: { Authorization: 'token' },
   isLoadingBlocked: false,
   isErrorHandlerBlocked: false,
   handleErrorsBy: 'status', // can be 'status' or 'name'
@@ -89,7 +90,8 @@ import { useAxios } from '@mertsolak/axios-helper';
 const HomePage = () => {
   const axios1 = useAxios({ isLoadingBlocked: true, isErrorHandlerBlocked: true }); // progress spinner and global error handler blocked
   const axios2 = useAxios({ isLoadingBlocked: false, isErrorHandlerBlocked: false }); // progress spinner and global error handler not blocked
-  const axios3 = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
+  const axios3 = useAxios({ headers: { Authorization: 'token' } }); // uses default options with additional headers
+  const axios4 = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
 
   useEffect(() => {
     const getData = async () => {
@@ -97,6 +99,7 @@ const HomePage = () => {
         const { data } = await axios1.get(url);
         const { data } = await axios2.get(url);
         const { data } = await axios3.get(url);
+        const { data } = await axios4.get(url);
       } catch (error) {
         if (!error?.config?.handled) {
           // you can handle the errors that is not handled by the global error handler in here.
@@ -124,6 +127,7 @@ import { useContext, useEffect } from 'react';
 import { AxiosContext } from '@mertsolak/axios-helper';
 
 const updatedDefaultOptions = {
+  headers: { Authorization: 'token' },
   isLoadingBlocked: false,
   isErrorHandlerBlocked: false,
   handleErrorsBy: 'name',
@@ -135,11 +139,12 @@ const updatedErrorHandler = (errorMessage) => {
 };
 
 const SomeOtherComponent = () => {
-  const { setAxiosDefaultOptions, setErrorHandler } = useContext(AxiosContext);
+  const { setAxiosDefaultOptions, setErrorHandler, setHeadersOption } = useContext(AxiosContext);
 
   useEffect(() => {
     setAxiosDefaultOptions(updatedDefaultOptions);
     setErrorHandler(updatedErrorHandler);
+    setHeadersOption({ Authorization: 'token' });
   }, []);
 
   return <p>Some Other Component</p>;
