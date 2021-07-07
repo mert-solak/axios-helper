@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.4](https://github.com/mert-solak/axios-helper/compare/v3.0.4...v3.1.4) (2021-07-07)
+
+
+### Features
+
+* **src/*:** axios headers option and set method added ([937dcb6](https://github.com/mert-solak/axios-helper/commit/937dcb622fffaec55a95cd978a83bf2fbb683f82))
+
+
+### Bug Fixes
+
+* **.gitignore:** gitignore update ([157056b](https://github.com/mert-solak/axios-helper/commit/157056b4ea11237b0ca3927b0732b5d4306df24c))
+
 ### [3.0.4](https://github.com/mert-solak/axios-helper/compare/v3.0.3...v3.0.4) (2021-05-17)
 
 
