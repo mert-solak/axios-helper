@@ -9,6 +9,7 @@ export interface Options {
   isErrorHandlerBlocked: boolean;
   handleErrorsBy: HandleErrorsBy;
   handleErrorsWith: HandleErrorsWith;
+  headers?: any;
 }
 
 declare module 'axios' {
@@ -41,12 +42,17 @@ export type Action =
   | {
       type: 'SET_ERROR_HANDLER';
       payload: State['errorHandler'];
+    }
+  | {
+      type: 'SET_HEADERS_OPTION';
+      payload: State['defaultOptions']['headers'];
     };
 
 export interface AxiosContextValue extends State {
   setAxiosIsLoading: (isLoading: State['isLoading']) => void;
   setAxiosDefaultOptions: (defaultOptions: State['defaultOptions']) => void;
   setErrorHandler: (errorHandler: State['errorHandler']) => void;
+  setHeadersOption: (headers: State['defaultOptions']['headers']) => void;
 }
 
 export type SetAxiosIsLoadingByCounter = (

@@ -18,6 +18,7 @@ const axiosContextValue: AxiosContextValue = {
   setAxiosIsLoading: () => {},
   setAxiosDefaultOptions: () => {},
   setErrorHandler: () => {},
+  setHeadersOption: () => {},
 };
 
 export const AxiosContext = createContext(axiosContextValue);
@@ -32,6 +33,9 @@ const reducer = (state: State, action: Action): State => {
 
     case 'SET_ERROR_HANDLER':
       return { ...state, errorHandler: action.payload };
+
+    case 'SET_HEADERS_OPTION':
+      return { ...state, defaultOptions: { ...state.defaultOptions, headers: action.payload } };
 
     default:
       return state;
@@ -54,6 +58,9 @@ export const AxiosProvider: React.FC<ContextProps> = ({ children, defaultOptions
   const setErrorHandler = useCallback((newErrorHandler?: State['errorHandler']) => {
     dispatch({ type: 'SET_ERROR_HANDLER', payload: newErrorHandler });
   }, []);
+  const setHeadersOption = useCallback((headers: State['defaultOptions']['headers']) => {
+    dispatch({ type: 'SET_HEADERS_OPTION', payload: headers });
+  }, []);
 
   useEffect(() => {
     setAxiosDefaultOptions(defaultOptions);
@@ -66,7 +73,9 @@ export const AxiosProvider: React.FC<ContextProps> = ({ children, defaultOptions
 
   const provider = useMemo(
     () => (
-      <AxiosContext.Provider value={{ ...state, setAxiosIsLoading, setAxiosDefaultOptions, setErrorHandler }}>
+      <AxiosContext.Provider
+        value={{ ...state, setAxiosIsLoading, setAxiosDefaultOptions, setErrorHandler, setHeadersOption }}
+      >
         {children}
       </AxiosContext.Provider>
     ),
