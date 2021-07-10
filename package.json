@@ -1,6 +1,6 @@
 {
   "name": "@mertsolak/axios-helper",
-  "version": "3.1.4",
+  "version": "3.2.0",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": {
