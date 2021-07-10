@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 
-type HandleErrorsBy = 'name' | 'status';
+type HandleErrorsBy = string;
 type HandleErrorsWith = Record<string, string>;
 export type ErrorHandler = ((errorMessage: string) => void) | null;
 
@@ -12,6 +12,14 @@ export interface Options {
   headers?: any;
 }
 
+export type Service = {
+  [key: string]: (axios: AxiosInstance, ...params: any) => any;
+};
+
+export interface Services {
+  [key: string]: Service;
+}
+
 declare module 'axios' {
   interface AxiosRequestConfig extends Partial<Options> {
     handled?: boolean;
@@ -19,16 +27,30 @@ declare module 'axios' {
 }
 
 export interface State {
+  services: Services;
   isLoading: boolean;
   defaultOptions: Options;
   errorHandler: ErrorHandler;
 }
 export interface ContextProps {
+  services: State['services'];
   errorHandler: State['errorHandler'];
   defaultOptions: State['defaultOptions'];
 }
 
+type Tail<K extends unknown[]> = K extends [AxiosInstance, ...infer Rest] ? Rest : K;
+
 export type HookProps = Partial<State['defaultOptions']>;
+export interface HookReturn<T extends Services> {
+  axios: AxiosInstance;
+  services: {
+    [firstKey in keyof T]: {
+      [secondKey in keyof T[keyof T]]: (
+        ...params: Tail<Parameters<T[keyof T][keyof T[keyof T]]>>
+      ) => ReturnType<T[keyof T][keyof T[keyof T]]>;
+    };
+  };
+}
 
 export type Action =
   | {

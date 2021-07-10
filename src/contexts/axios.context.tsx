@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useReducer } fro
 import { ContextProps, Action, State, AxiosContextValue } from '../interfaces/main.interface';
 
 const initialState: State = {
+  services: {},
   isLoading: false,
   errorHandler: null,
   defaultOptions: {
@@ -42,11 +43,17 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const AxiosProvider: React.FC<ContextProps> = ({ children, defaultOptions, errorHandler }) => {
+export const AxiosProvider: React.FC<ContextProps> = ({
+  children,
+  defaultOptions,
+  errorHandler,
+  services,
+}) => {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     defaultOptions,
     errorHandler,
+    services,
   });
 
   const setAxiosIsLoading = useCallback((isLoading?: State['isLoading']) => {

@@ -20,18 +20,37 @@ npm i @mertsolak/axios-helper
 Initialize it in the root component.
 
 ```typescript
-// Root.tsx
+// dataService.ts
 
+// First parameter must be axios for all services.
+const getData = (axios, ...otherParams) => {
+  return axios.get('url');
+};
+
+export default {
+  getData,
+};
+```
+
+```typescript
+// Root.tsx
 import { AxiosProvider } from '@mertsolak/axios-helper';
+
+import dataService from './dataService';
 
 import App from './App';
 
+export const services = {
+  dataService,
+};
+
 const defaultOptions = {
+  services,
   headers: { Authorization: 'token' },
   isLoadingBlocked: false,
   isErrorHandlerBlocked: false,
-  handleErrorsBy: 'status', // can be 'status' or 'name'
-  handleErrorsWith: { '404': 'not found' }, // format must be {[status]: 'error message'} or {[name]: 'error message'} depends on the handleErrorsBy option
+  handleErrorsBy: 'status',
+  handleErrorsWith: { '404': 'not found' }, // format must be {[status]: 'error message'} and depends on the handleErrorsBy option
 };
 
 const errorHandler = (errorMessage) => {
@@ -87,11 +106,16 @@ import { useEffect } from 'react';
 
 import { useAxios } from '@mertsolak/axios-helper';
 
+import services from './Root.tsx';
+
 const HomePage = () => {
-  const axios1 = useAxios({ isLoadingBlocked: true, isErrorHandlerBlocked: true }); // progress spinner and global error handler blocked
-  const axios2 = useAxios({ isLoadingBlocked: false, isErrorHandlerBlocked: false }); // progress spinner and global error handler not blocked
-  const axios3 = useAxios({ headers: { Authorization: 'token' } }); // uses default options with additional headers
-  const axios4 = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
+  const { axios: axios1 } = useAxios({ isLoadingBlocked: true, isErrorHandlerBlocked: true }); // progress spinner and global error handler blocked
+  const { axios: axios2 } = useAxios({ isLoadingBlocked: false, isErrorHandlerBlocked: false }); // progress spinner and global error handler not blocked
+  const { axios: axios3 } = useAxios({ headers: { Authorization: 'token' } }); // uses default options with additional headers
+  const { axios: axios4 } = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
+
+  // or services can be imported with configured axios.
+  const { services } = useAxios<typeof services>();
 
   useEffect(() => {
     const getData = async () => {
@@ -100,6 +124,8 @@ const HomePage = () => {
         const { data } = await axios2.get(url);
         const { data } = await axios3.get(url);
         const { data } = await axios4.get(url);
+
+        const { data } = services.dataService.getData();
       } catch (error) {
         if (!error?.config?.handled) {
           // you can handle the errors that is not handled by the global error handler in here.
