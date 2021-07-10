@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/mert-solak/axios-helper/compare/v3.2.0...v4.0.0) (2021-07-10)
+
+
+### Features
+
+* **src/*:** services configuration added ([671cc2b](https://github.com/mert-solak/axios-helper/commit/671cc2b1bad54df829807a04c659336729981cd2))
+
 ## [3.2.0](https://github.com/mert-solak/axios-helper/compare/v3.1.4...v3.2.0) (2021-07-10)
 
 ### [3.1.4](https://github.com/mert-solak/axios-helper/compare/v3.0.4...v3.1.4) (2021-07-07)
