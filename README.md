@@ -17,8 +17,6 @@ npm i @mertsolak/axios-helper
 
 ## Basic Usage
 
-Initialize it in the root component.
-
 ```typescript
 // dataService.ts
 
@@ -31,6 +29,8 @@ export default {
   getData,
 };
 ```
+
+Initialize it in the root component.
 
 ```typescript
 // Root.tsx
