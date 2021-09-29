@@ -34,7 +34,7 @@ Initialize it in the root component.
 
 ```typescript
 // Root.tsx
-import { AxiosProvider } from '@mertsolak/axios-helper';
+import { AxiosProvider, OptionsOfServices } from '@mertsolak/axios-helper';
 
 import dataService from './dataService';
 
@@ -44,13 +44,14 @@ export const services = {
   dataService,
 };
 
-const defaultOptions = {
-  services,
-  headers: { Authorization: 'token' },
-  isLoadingBlocked: false,
-  isErrorHandlerBlocked: false,
-  handleErrorsBy: 'status',
-  handleErrorsWith: { '404': 'not found' }, // format must be {[status]: 'error message'} and depends on the handleErrorsBy option
+const options: OptionsOfServices<keyof typeof services> = {
+  dataService: {
+    headers: { Authorization: 'token' },
+    isLoadingBlocked: false,
+    isErrorHandlerBlocked: false,
+    handleErrorsBy: 'status',
+    handleErrorsWith: { '404': 'not found' }, // format must be {[status]: 'error message'} and depends on the handleErrorsBy option
+  },
 };
 
 const errorHandler = (errorMessage) => {
@@ -61,7 +62,7 @@ const errorHandler = (errorMessage) => {
 
 const Root = () => {
   return (
-    <AxiosProvider defaultOptions={defaultOptions} errorHandler={errorHandler}>
+    <AxiosProvider services={services} options={options} errorHandler={errorHandler}>
       <App />
     </AxiosProvider>
   );
@@ -115,7 +116,9 @@ const HomePage = () => {
   const { axios: axios4 } = useAxios(); // uses default options in root.tsx, progress spinner and global error handler not blocked
 
   // or services can be imported with configured axios.
-  const { services } = useAxios<typeof services>();
+  const {
+    services: { dataService },
+  } = useAxios<typeof services>();
 
   useEffect(() => {
     const getData = async () => {
@@ -125,7 +128,7 @@ const HomePage = () => {
         const { data } = await axios3.get(url);
         const { data } = await axios4.get(url);
 
-        const { data } = services.dataService.getData();
+        const { data } = dataService.getData();
       } catch (error) {
         if (!error?.config?.handled) {
           // you can handle the errors that is not handled by the global error handler in here.
@@ -139,42 +142,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
-```
-
-## Additional
-
-defaultOptions and errorHandler can be updated in everywhere.
-
-```typescript
-// SomeOtherComponent.tsx
-
-import { useContext, useEffect } from 'react';
-
-import { AxiosContext } from '@mertsolak/axios-helper';
-
-const updatedDefaultOptions = {
-  headers: { Authorization: 'token' },
-  isLoadingBlocked: false,
-  isErrorHandlerBlocked: false,
-  handleErrorsBy: 'name',
-  handleErrorsWith: { NOT_FOUND: 'not found' },
-};
-
-const updatedErrorHandler = (errorMessage) => {
-  console.log(errorMessage);
-};
-
-const SomeOtherComponent = () => {
-  const { setAxiosDefaultOptions, setErrorHandler, setHeadersOption } = useContext(AxiosContext);
-
-  useEffect(() => {
-    setAxiosDefaultOptions(updatedDefaultOptions);
-    setErrorHandler(updatedErrorHandler);
-    setHeadersOption({ Authorization: 'token' });
-  }, []);
-
-  return <p>Some Other Component</p>;
-};
-
-export default SomeOtherComponent;
 ```
