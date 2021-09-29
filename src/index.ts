@@ -1,5 +1,5 @@
 import { AxiosProvider, AxiosContext } from './contexts/axios.context';
 import { useAxios } from './hooks/axios.hook';
-import { Options, ErrorHandler } from './interfaces/main.interface';
+import { OptionsOfServices, ErrorHandler, Services } from './interfaces/main.interface';
 
-export { AxiosProvider, AxiosContext, useAxios, ErrorHandler, Options };
+export { AxiosProvider, AxiosContext, useAxios, ErrorHandler, OptionsOfServices, Services };

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { isDefined } from 'class-validator';
+import { isNil } from 'lodash';
 
 import { ConfigureInterceptors, SetAxiosIsLoadingByCounter } from '../interfaces/main.interface';
 
@@ -46,17 +46,17 @@ export const configureInterceptors: ConfigureInterceptors = (
       setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
     }
 
-    if (!options.isErrorHandlerBlocked && isDefined(errorHandler)) {
+    if (!options.isErrorHandlerBlocked && !isNil(errorHandler)) {
       const handleErrorsBy =
         error?.response?.data[options.handleErrorsBy] || error?.response?.[options.handleErrorsBy];
 
-      if (!isDefined(handleErrorsBy)) {
+      if (isNil(handleErrorsBy)) {
         return error;
       }
 
       const errorMessage = options.handleErrorsWith[handleErrorsBy];
 
-      if (!isDefined(errorMessage)) {
+      if (isNil(errorMessage)) {
         return error;
       }
 

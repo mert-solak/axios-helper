@@ -1,15 +1,21 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosRequestConfig as ModifiedAxiosRequestConfig } from 'axios';
+
+import { ReactNode } from 'react';
+
+declare module 'axios' {
+  interface AxiosRequestConfig extends Partial<Options> {
+    handled?: boolean;
+  }
+}
 
 type HandleErrorsBy = string;
-type HandleErrorsWith = Record<string, string>;
+type HandleErrorsWith = Record<string | number, string>;
 export type ErrorHandler = ((errorMessage: string) => void) | null;
-
 export interface Options {
   isLoadingBlocked: boolean;
   isErrorHandlerBlocked: boolean;
   handleErrorsBy: HandleErrorsBy;
   handleErrorsWith: HandleErrorsWith;
-  headers?: any;
 }
 
 export type Service = {
@@ -20,34 +26,33 @@ export interface Services {
   [key: string]: Service;
 }
 
-declare module 'axios' {
-  interface AxiosRequestConfig extends Partial<Options> {
-    handled?: boolean;
-  }
-}
+export type OptionsOfServices<T extends string | number | symbol> = Record<
+  T,
+  Options & ModifiedAxiosRequestConfig
+>;
 
 export interface State {
   services: Services;
+  options: OptionsOfServices<string>;
   isLoading: boolean;
-  defaultOptions: Options;
   errorHandler: ErrorHandler;
 }
-export interface ContextProps {
-  services: State['services'];
+export interface ContextProps<T extends State['services']> {
+  services: T;
+  options: OptionsOfServices<keyof T>;
   errorHandler: State['errorHandler'];
-  defaultOptions: State['defaultOptions'];
+  children: ReactNode;
 }
 
 type Tail<K extends unknown[]> = K extends [AxiosInstance, ...infer Rest] ? Rest : K;
 
-export type HookProps = Partial<State['defaultOptions']>;
+export type HookProps = Partial<ModifiedAxiosRequestConfig>;
 export interface HookReturn<T extends Services> {
-  axios: AxiosInstance;
   services: {
     [firstKey in keyof T]: {
-      [secondKey in keyof T[keyof T]]: (
-        ...params: Tail<Parameters<T[keyof T][keyof T[keyof T]]>>
-      ) => ReturnType<T[keyof T][keyof T[keyof T]]>;
+      [secondKey in keyof T[firstKey]]: (
+        ...params: Tail<Parameters<T[firstKey][secondKey]>>
+      ) => ReturnType<T[firstKey][secondKey]>;
     };
   };
 }
@@ -58,23 +63,12 @@ export type Action =
       payload: boolean;
     }
   | {
-      type: 'SET_DEFAULT_OPTIONS';
-      payload: State['defaultOptions'];
-    }
-  | {
       type: 'SET_ERROR_HANDLER';
       payload: State['errorHandler'];
-    }
-  | {
-      type: 'SET_HEADERS_OPTION';
-      payload: State['defaultOptions']['headers'];
     };
 
 export interface AxiosContextValue extends State {
   setAxiosIsLoading: (isLoading: State['isLoading']) => void;
-  setAxiosDefaultOptions: (defaultOptions: State['defaultOptions']) => void;
-  setErrorHandler: (errorHandler: State['errorHandler']) => void;
-  setHeadersOption: (headers: State['defaultOptions']['headers']) => void;
 }
 
 export type SetAxiosIsLoadingByCounter = (
@@ -86,7 +80,7 @@ export type ConfigureInterceptors = (
   axiosInstance: AxiosInstance,
   setAxiosIsLoading: AxiosContextValue['setAxiosIsLoading'],
   errorHandlerParams: {
-    errorHandler: AxiosContextValue['errorHandler'];
-    errorHandlerOptions: AxiosContextValue['defaultOptions'];
+    errorHandler: ErrorHandler;
+    errorHandlerOptions: ModifiedAxiosRequestConfig;
   },
 ) => void;
