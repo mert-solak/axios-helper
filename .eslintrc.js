@@ -28,5 +28,6 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.jsx', '.tsx'] }],
     'react/prop-types': 0,
     'jsx-a11y/label-has-associated-control': 0,
+    'linebreak-style': 0,
   },
 };
