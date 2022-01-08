@@ -44,7 +44,7 @@ export interface ContextProps<T extends State['services']> {
   children: ReactNode;
 }
 
-type Tail<K extends unknown[]> = K extends [AxiosInstance, ...infer Rest] ? Rest : K;
+type Tail<K extends unknown[]> = K extends [any, ...infer Rest] ? Rest : K;
 
 export type HookProps = Partial<ModifiedAxiosRequestConfig>;
 export interface HookReturn<T extends Services> {
