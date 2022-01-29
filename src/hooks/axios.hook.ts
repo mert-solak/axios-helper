@@ -11,17 +11,14 @@ export const useAxios = <T extends Services>(newOptions?: HookProps): HookReturn
   const { setAxiosIsLoading, options, errorHandler, services } = useContext(AxiosContext);
 
   const servicesWithAxios = useMemo(() => {
-    const newServicesWithAxios: HookReturn<T>['services'] = { ...services } as HookReturn<T>['services'];
+    const newServicesWithAxios = {};
 
     (Object.keys(services) as Array<keyof T>).forEach((service) => {
+      newServicesWithAxios[service as string] = {};
       (Object.keys(services[service as string]) as Array<keyof T[keyof T]>).forEach((serviceMethod) => {
-        let combinedOptions: Options;
+        const combinedOptions: Options = { ...options[service as string] };
 
-        if (!isNil(options[service as string])) {
-          merge(combinedOptions, options[service as string]);
-        }
-
-        if (!isNil(options[service as string])) {
+        if (!isNil(newOptions)) {
           merge(combinedOptions, newOptions);
         }
 
@@ -31,13 +28,13 @@ export const useAxios = <T extends Services>(newOptions?: HookProps): HookReturn
           errorHandlerOptions: combinedOptions,
         });
 
-        newServicesWithAxios[service][serviceMethod] = services[service as string][
+        newServicesWithAxios[service as string][serviceMethod] = services[service as string][
           serviceMethod as string
         ].bind(null, axios);
       });
     });
 
-    return newServicesWithAxios;
+    return newServicesWithAxios as HookReturn<T>['services'];
   }, [newOptions]);
 
   return { services: servicesWithAxios };
