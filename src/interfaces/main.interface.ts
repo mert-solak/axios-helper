@@ -71,10 +71,7 @@ export interface AxiosContextValue extends State {
   setAxiosIsLoading: (isLoading: State['isLoading']) => void;
 }
 
-export type SetAxiosIsLoadingByCounter = (
-  requestNumber: number,
-  setAxiosIsLoading: AxiosContextValue['setAxiosIsLoading'],
-) => void;
+export type SetAxiosIsLoadingByCounter = (setAxiosIsLoading: AxiosContextValue['setAxiosIsLoading']) => void;
 
 export type ConfigureInterceptors = (
   axiosInstance: AxiosInstance,

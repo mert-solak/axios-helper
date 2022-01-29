@@ -3,7 +3,9 @@ import { isNil } from 'lodash';
 
 import { ConfigureInterceptors, SetAxiosIsLoadingByCounter } from '../interfaces/main.interface';
 
-const setAxiosIsLoadingByCounter: SetAxiosIsLoadingByCounter = (requestNumber: number, setAxiosIsLoading) => {
+let requestNumber = 0;
+
+const setAxiosIsLoadingByCounter: SetAxiosIsLoadingByCounter = (setAxiosIsLoading) => {
   if (requestNumber < 1) {
     setAxiosIsLoading(false);
   } else {
@@ -16,7 +18,6 @@ export const configureInterceptors: ConfigureInterceptors = (
   setAxiosIsLoading,
   errorHandlerParams,
 ) => {
-  let requestNumber = 0;
   let isLoadingBlocked = false;
 
   const options = errorHandlerParams.errorHandlerOptions;
@@ -25,25 +26,25 @@ export const configureInterceptors: ConfigureInterceptors = (
   const requestOut = () => {
     if (!isLoadingBlocked) {
       requestNumber += 1;
-      setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
+      setAxiosIsLoadingByCounter(setAxiosIsLoading);
     }
   };
   const requestError = () => {
     if (!isLoadingBlocked) {
       requestNumber -= 1;
-      setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
+      setAxiosIsLoadingByCounter(setAxiosIsLoading);
     }
   };
   const responseSuccess = () => {
     if (!isLoadingBlocked) {
       requestNumber -= 1;
-      setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
+      setAxiosIsLoadingByCounter(setAxiosIsLoading);
     }
   };
   const responseError = (error: AxiosError): AxiosError => {
     if (!isLoadingBlocked) {
       requestNumber -= 1;
-      setAxiosIsLoadingByCounter(requestNumber, setAxiosIsLoading);
+      setAxiosIsLoadingByCounter(setAxiosIsLoading);
     }
 
     if (!options.isErrorHandlerBlocked && !isNil(errorHandler)) {
